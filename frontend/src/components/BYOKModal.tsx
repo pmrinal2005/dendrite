@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { KeyRound, Sparkles, X, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
-import { useStore } from '../lib/store';
+import { useStore, DEFAULT_BACKEND_URL } from '../lib/store';
+
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -12,7 +13,7 @@ export default function BYOKModal({ open, onClose }: Props) {
   const [kbAgentId, setKbAgentId] = useState(byok?.kbAgentId || '');
   const [fabricWS, setFabricWS] = useState(byok?.fabricWorkspaceId || '');
   const [fabricOnt, setFabricOnt] = useState(byok?.fabricOntologyId || '');
-  const [backend, setBackend] = useState(byok?.backendBase || 'http://localhost:8000');
+  const [backend, setBackend] = useState(byok?.backendBase || DEFAULT_BACKEND_URL);
 
   function save() {
     setBYOK({

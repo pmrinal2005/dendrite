@@ -17,9 +17,16 @@ type State = {
 
 const LS = 'dendrite.byok';
 
+export const DEFAULT_BACKEND_URL =
+  (import.meta.env.VITE_DEFAULT_BACKEND_URL as string) ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : '');
+
 const initial = (() => {
   try {
-    const raw = localStorage.getItem(LS);
+    if (typeof window === 'undefined') return null;
+    const raw = window.localStorage.getItem(LS);
     return raw ? (JSON.parse(raw) as BYOK) : null;
   } catch {
     return null;
@@ -30,8 +37,10 @@ export const useStore = create<State>((set) => ({
   byok: initial,
   ready: !!initial,
   setBYOK: (b) => {
-    if (b) localStorage.setItem(LS, JSON.stringify(b));
-    else localStorage.removeItem(LS);
+    if (typeof window !== 'undefined') {
+      if (b) window.localStorage.setItem(LS, JSON.stringify(b));
+      else window.localStorage.removeItem(LS);
+    }
     set({ byok: b, ready: !!b });
   }
 }));

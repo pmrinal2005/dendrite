@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: dendrite-backend
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.4
+      - key: CORS_ORIGINS
+        value: "*"  # tighten to your Vercel URL after first deploy
+      - key: MIRL_TIER1_MODEL
+        value: Phi-4-mini-instruct
+      - key: MIRL_TIER2_MODEL
+        value: gpt-4o-mini
+      - key: MIRL_TIER3_MODEL
+        value: gpt-4.1-mini
+      - key: MIRL_TIER4_MODEL
+        value: o4-mini
+      - key: CONFIDENCE_GATE
+        value: "0.72"

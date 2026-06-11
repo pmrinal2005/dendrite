@@ -41,8 +41,12 @@ function headers() {
 }
 
 function base() {
-  return useStore.getState().byok?.backendBase || 'http://localhost:8000';
+  const b = useStore.getState().byok?.backendBase;
+  if (b) return b.replace(/\/+$/, '');
+  // Allow read-only /system/* calls to a default backend if user hasn't configured BYOK
+  return (import.meta.env.VITE_DEFAULT_BACKEND_URL as string) || 'http://localhost:8000';
 }
+
 
 export async function chat(req: ChatRequest): Promise<ChatResponse> {
   const r = await fetch(`${base()}/chat`, {
